@@ -18,17 +18,17 @@ with open("30DayQuakes.json", "r") as datafile:
     data = json.load(datafile)
 
 def quakes(data):
-    if data['properties']['type'] == 'earthquake':
+    if data['properties']['type'] is not None:
         return True
     return False
 
-import pprint as prettyprint
 
 TotalEvents = len(list(filter(quakes, data['features'])))
-FeltQuakes = sum(True for q in data['features'] if q['properties']['felt'] is not None and q['properties']['felt']>0)
+
+TotalFelt = sum(True for q in data['features'] if q['properties']['felt'] is not None and q['properties']['felt']>=100)
 
 mfs = max(data['features'], key=lambda x: x['properties']['felt'] if x['properties']['felt'] is not None else 0)
-MostFeltEvent = mfs['properties']['place']
+MostFeltEvent = 'M '+str(mfs['properties']['mag'])+' - ' + mfs['properties']['place']
 MostFeltCount = mfs['properties']['felt']
 
 tensig = sorted(data['features'],key=lambda x: x['properties']['sig'] if x['properties']['sig'] is not None else 0,reverse=True)[:10]
@@ -36,6 +36,6 @@ for t in tensig:
     print("{0} place with a significance of {1}".format(t['properties']['place'],t['properties']['sig']))
 
 print("Total number of quakes:", TotalEvents) 
-print("Number of quakes felt by at least 100 people:", FeltQuakes)
+print("Number of quakes felt by at least 100 people:", TotalFelt)
 print("Most felt event:", MostFeltEvent)
 print("Most felt count:", MostFeltCount)
