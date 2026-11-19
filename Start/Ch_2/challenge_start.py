@@ -13,5 +13,4 @@ for feature in data['features']:
     defdict[feature['properties']['type']] +=1
 
 print("Number of events by type:")
-for event_type, count in defdict.items():
-    print(f"  {event_type}: {count}")
+print(dict(defdict.items()))
